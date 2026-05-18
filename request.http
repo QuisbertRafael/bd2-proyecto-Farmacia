@@ -1,0 +1,27 @@
+###
+POST http://localhost:5000/todo HTTP/1.1
+Content-Type: application/json
+
+{
+    "title": "Learn MongoDB en Espanol",
+    "description": "Learn MongoDB and the official driver en espanol"
+}
+
+###
+GET http://localhost:5000/todo HTTP/1.1
+
+###
+GET http://localhost:5000/todo/6a0690a0314a728a29f686de HTTP/1.1
+
+###
+PUT http://localhost:5000/todo/6a0690a0314a728a29f686de HTTP/1.1
+Content-Type: application/json
+
+{
+    "title": "Learn Python updated",
+    "done": true
+}
+
+###
+DELETE http://localhost:5000/todo/6a0690d4314a728a29f686df HTTP/1.1
+
