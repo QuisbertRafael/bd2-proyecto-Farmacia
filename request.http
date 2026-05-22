@@ -3,25 +3,29 @@ POST http://localhost:5000/todo HTTP/1.1
 Content-Type: application/json
 
 {
-    "title": "Learn MongoDB en Espanol",
-    "description": "Learn MongoDB and the official driver en espanol"
+    "nombre": "Paracetamol",
+    "descripcion": "Medicamento para aliviar dolor y fiebre",
+    "precio": 15.5,
+    "stock": 100,
+    "categoria": "Medicamentos",
+    "imagen": "paracetamol.jpg"
 }
 
 ###
 GET http://localhost:5000/todo HTTP/1.1
 
 ###
-GET http://localhost:5000/todo/6a0690a0314a728a29f686de HTTP/1.1
+GET http://localhost:5000/todo/----------- HTTP/1.1
 
 ###
-PUT http://localhost:5000/todo/6a0690a0314a728a29f686de HTTP/1.1
+PUT http://localhost:5000/todo/------------- HTTP/1.1
 Content-Type: application/json
 
 {
-    "title": "Learn Python updated",
-    "done": true
+    "nombre": "Paracetamol Extra",
+    "precio": 18,
+    "stock": 80
 }
 
 ###
-DELETE http://localhost:5000/todo/6a0690d4314a728a29f686df HTTP/1.1
-
+DELETE http://localhost:5000/todo/ID_DEL_PRODUCTO HTTP/1.1

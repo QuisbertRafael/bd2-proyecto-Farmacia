@@ -1,25 +1,31 @@
 from flask import Blueprint
 
-from services.todo import create_todo_service, get_todos_service, get_todo_service, update_todo_service, delete_todo_service
+from services.todo import (
+    create_product_service,
+    get_products_service,
+    get_product_service,
+    update_product_service,
+    delete_product_service
+)
 
 todo = Blueprint('todo', __name__)
 
 @todo.route('/', methods=['GET'])
-def get_todos():
-    return get_todos_service()
+def get_products():
+    return get_products_service()
 
 @todo.route('/<id>', methods=['GET'])
-def get_todo(id):
-    return get_todo_service(id)
+def get_product(id):
+    return get_product_service(id)
 
 @todo.route('/', methods=['POST'])
-def create_todo():
-    return create_todo_service()
+def create_product():
+    return create_product_service()
 
-@todo.route('/<id>',methods=['PUT'])
-def update_todo(id):
-    return update_todo_service(id)
+@todo.route('/<id>', methods=['PUT'])
+def update_product(id):
+    return update_product_service(id)
 
 @todo.route('/<id>', methods=['DELETE'])
-def delete_todo(id):
-    return delete_todo_service(id)
+def delete_product(id):
+    return delete_product_service(id)

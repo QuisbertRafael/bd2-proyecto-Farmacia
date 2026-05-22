@@ -3,55 +3,76 @@ from bson import json_util, ObjectId
 
 from config.mongodb import mongo
 
-def create_todo_service():
+# Documento base de producto
+def product_helper(data):
+    return {
+        'nombre': data.get('nombre'),
+        'descripcion': data.get('descripcion'),
+        'precio': data.get('precio'),
+        'stock': data.get('stock'),
+        'categoria': data.get('categoria'),
+        'imagen': data.get('imagen')
+    }
+
+# Crear producto
+def create_product_service():
     data = request.get_json()
-    title = data.get('title', None)
-    description = data.get('description', None)
 
-    if title:
-        response = mongo.db.todos.insert_one({
-            'title': title,
-            'description': description,
-            'done': False
-        })
+    product = product_helper(data)
 
-        result = {
-            'id': str(response.inserted_id),
-            'title': title,
-            'description': description,
-            'done': False
-        }
+    # Validación básica
+    if not product['nombre']:
+        return 'El nombre es obligatorio', 400
 
-        return result
+    response = mongo.db.productos.insert_one(product)
 
-    else:
-        return 'Invalid payload', 400
+    result = {
+        'id': str(response.inserted_id),
+        **product
+    }
 
-def get_todos_service():
-    data = mongo.db.todos.find()
+    return result
+
+# Obtener todos los productos
+def get_products_service():
+    data = mongo.db.productos.find()
     result = json_util.dumps(data)
     return Response(result, mimetype='application/json')
 
-def get_todo_service(id):
-    data = mongo.db.todos.find_one({'_id': ObjectId(id)})
-    result = json_util.dumps(data)
-    return Response(result, mimetype='applciation/json')
+# Obtener un producto por ID
+def get_product_service(id):
+    data = mongo.db.productos.find_one({
+        '_id': ObjectId(id)
+    })
 
-def update_todo_service(id):
+    result = json_util.dumps(data)
+
+    return Response(result, mimetype='application/json')
+
+# Actualizar producto
+def update_product_service(id):
     data = request.get_json()
+
     if len(data) == 0:
         return 'Invalid payload', 400
 
-    response = mongo.db.todos.update_one({'_id': ObjectId(id)}, {'$set': data})
+    response = mongo.db.productos.update_one(
+        {'_id': ObjectId(id)},
+        {'$set': data}
+    )
 
     if response.modified_count >= 1:
-        return 'Todo actualizado satisfactoriamente', 200
+        return 'Producto actualizado satisfactoriamente', 200
     else:
-        return 'Todo no fue encontrado', 404
+        return 'Producto no encontrado', 404
 
-def delete_todo_service(id):
-    response = mongo.db.todos.delete_one({'_id': ObjectId(id)})
+# Eliminar producto
+def delete_product_service(id):
+    response = mongo.db.productos.delete_one({
+        '_id': ObjectId(id)
+    })
+
     if response.deleted_count >= 1:
-        return 'Todo deleted succesfully', 200
+        return 'Producto eliminado satisfactoriamente', 200
     else:
-        return 'Todo not found', 404
+        return 'Producto no encontrado', 404
