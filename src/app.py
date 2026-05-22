@@ -1,5 +1,7 @@
 from flask import Flask, render_template
 from dotenv import load_dotenv
+from routes.product import product
+
 import os
 
 from config.mongodb import mongo
@@ -18,6 +20,7 @@ def index():
 
 app.register_blueprint(todo, url_prefix='/todo')
 
+app.register_blueprint(product, url_prefix='/products')
 
 
 if __name__ == "__main__":
