@@ -1,33 +1,64 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Productos</title>
-</head>
-<body>
+{% extends "base.html" %}
 
-    <h1>Lista de Productos</h1>
+{% block title %}Listado de productos{% endblock %}
 
-    {% for product in products %}
-        <div>
-            <h2>{{ product.nombre }}</h2>
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+    <div>
+        <h1 class="h3 fw-bold mb-1">Listado de productos</h1>
+        <p class="text-muted mb-0">Productos registrados en la base de datos.</p>
+    </div>
+    <a class="btn btn-primary" href="{{ url_for('product.new_product') }}">+ Nuevo producto</a>
+</div>
 
-            <p>{{ product.descripcion }}</p>
+{% if products|length == 0 %}
+    <div class="alert alert-info text-center rounded-4 shadow-sm">
+        No hay productos registrados todavía.
+        <a href="{{ url_for('product.new_product') }}" class="alert-link">Crear el primer producto</a>.
+    </div>
+{% else %}
+    <div class="row g-4">
+        {% for product in products %}
+            <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
+                <div class="card h-100 product-card shadow-sm border-0 rounded-4 overflow-hidden">
+                    <img
+                        src="{{ product.imagen if product.imagen else url_for('static', filename='img/paracetamol.jpg') }}"
+                        class="card-img-top product-image"
+                        alt="Imagen de {{ product.nombre }}"
+                        onerror="this.onerror=null; this.src='{{ url_for('static', filename='img/paracetamol.jpg') }}';"
+                    >
+                    <div class="card-body d-flex flex-column">
+                        <span class="badge text-bg-secondary align-self-start mb-2">{{ product.categoria }}</span>
+                        <h2 class="h5 card-title fw-bold">{{ product.nombre }}</h2>
+                        <p class="card-text text-muted small description-text">
+                            {{ product.descripcion or 'Sin descripción registrada.' }}
+                        </p>
 
-            <p>Precio: {{ product.precio }}</p>
+                        <div class="mt-auto">
+                            <div class="d-flex justify-content-between border-top pt-3 mb-3">
+                                <div>
+                                    <small class="text-muted d-block">Precio</small>
+                                    <strong>Bs {{ '%.2f'|format(product.precio|float) }}</strong>
+                                </div>
+                                <div class="text-end">
+                                    <small class="text-muted d-block">Stock</small>
+                                    <strong>{{ product.stock }}</strong>
+                                </div>
+                            </div>
 
-            <p>Stock: {{ product.stock }}</p>
-
-            <p>Categoría: {{ product.categoria }}</p>
-
-            <img
-                src="{{ product.imagen }}"
-                width="200"
-            >
-        </div>
-
-        <hr>
-    {% endfor %}
-
-</body>
-</html>
+                            <div class="d-grid gap-2 d-md-flex">
+                                <a class="btn btn-outline-warning flex-fill" href="{{ url_for('product.edit_product', id=product._id) }}">
+                                    Editar
+                                </a>
+                                <form class="flex-fill" action="{{ url_for('product.delete_product', id=product._id) }}" method="POST" onsubmit="return confirm('¿Deseas eliminar este producto?');">
+                                    <button class="btn btn-outline-danger w-100" type="submit">Eliminar</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
+{% endblock %}
