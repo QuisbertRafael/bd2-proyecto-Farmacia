@@ -1,13 +1,16 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=<device-width>, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <h1 style="color: green">
-        Welcome to my API with python and Flask
-    </h1>
-</body>
-</html>
+{% extends "base.html" %}
+
+{% block title %}Inicio - BD II Productos{% endblock %}
+
+{% block content %}
+<section class="bg-white rounded-4 shadow-sm p-5 text-center">
+    <h1 class="display-6 fw-bold text-primary mb-3">Sistema de productos</h1>
+    <p class="lead text-muted mb-4">
+        Proyecto BD II con Flask, MongoDB y Bootstrap para crear y listar productos.
+    </p>
+    <div class="d-flex justify-content-center gap-2 flex-wrap">
+        <a class="btn btn-primary btn-lg" href="{{ url_for('product.get_products') }}">Ver productos</a>
+        <a class="btn btn-outline-primary btn-lg" href="{{ url_for('product.new_product') }}">Crear producto</a>
+    </div>
+</section>
+{% endblock %}
