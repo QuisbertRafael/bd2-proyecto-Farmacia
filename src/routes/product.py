@@ -1,5 +1,6 @@
 from flask import Blueprint
 
+
 from services.product import (
     create_product_service,
     delete_product_view_service,

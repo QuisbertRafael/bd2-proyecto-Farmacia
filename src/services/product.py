@@ -17,8 +17,52 @@ def _clean_product_payload(form):
 
 
 def get_products_service():
-    products = list(mongo.db.productos.find().sort("nombre", 1))
-    return render_template("products.html", products=products)
+    # ── 1. Leer parámetros de query ───────────────────────────────────
+    nombre     = request.args.get("nombre", "").strip()
+    categoria  = request.args.get("categoria", "").strip()
+    precio_min = request.args.get("precio_min", "").strip()
+    precio_max = request.args.get("precio_max", "").strip()
+
+    # ── 2. Construir filtro dinámico ──────────────────────────────────
+    filtro = {}
+
+    if nombre:
+        filtro["nombre"] = {"$regex": nombre, "$options": "i"}
+
+    if categoria:
+        filtro["categoria"] = categoria
+
+    rango_precio = {}
+    if precio_min:
+        try:
+            rango_precio["$gte"] = float(precio_min)
+        except ValueError:
+            flash("Precio mínimo inválido, se ignoró el filtro.", "warning")
+
+    if precio_max:
+        try:
+            rango_precio["$lte"] = float(precio_max)
+        except ValueError:
+            flash("Precio máximo inválido, se ignoró el filtro.", "warning")
+
+    if rango_precio:
+        filtro["precio"] = rango_precio
+
+    # ── 3. Consultar MongoDB ──────────────────────────────────────────
+    products  = list(mongo.db.productos.find(filtro).sort("nombre", 1))
+    categorias = mongo.db.productos.distinct("categoria")
+
+    return render_template(
+        "products.html",
+        products=products,
+        categorias=categorias,
+        filtros={
+            "nombre":     nombre,
+            "categoria":  categoria,
+            "precio_min": precio_min,
+            "precio_max": precio_max,
+        },
+    )
 
 
 def new_product_form_service():
