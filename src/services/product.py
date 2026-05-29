@@ -131,3 +131,14 @@ def delete_product_view_service(id):
         flash("Producto no encontrado.", "warning")
 
     return redirect(url_for("product.get_products"))
+
+def get_product_detail_service(id):
+    try:
+        product = mongo.db.productos.find_one({"_id": ObjectId(id)})
+    except InvalidId:
+        product = None
+
+    if not product:
+        return render_template("404.html"), 404
+
+    return render_template("product_detail.html", product=product)

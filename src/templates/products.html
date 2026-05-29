@@ -1,12 +1,12 @@
 {% extends "base.html" %}
 
 {% block title %}Listado de productos{% endblock %}
-
+    
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
     <div>
         <h1 class="h3 fw-bold mb-1">Listado de productos</h1>
-        <p class="text-muted mb-0">Productos registrados en la base de datos.</p>
+        <p class="text-muted mb-0">Productos registrados en la  base de datos.</p>
     </div>
     <a class="btn btn-primary" href="{{ url_for('product.new_product') }}">+ Nuevo producto</a>
 </div>
@@ -111,6 +111,9 @@
                             </div>
 
                             <div class="d-grid gap-2 d-md-flex">
+                                <a class="btn btn-outline-primary flex-fill" href="{{ url_for('product.get_product', id=product._id) }}">
+                                    Ver
+                                </a>
                                 <a class="btn btn-outline-warning flex-fill" href="{{ url_for('product.edit_product', id=product._id) }}">
                                     Editar
                                 </a>

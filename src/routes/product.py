@@ -5,6 +5,7 @@ from services.product import (
     create_product_service,
     delete_product_view_service,
     edit_product_form_service,
+    get_product_detail_service,
     get_products_service,
     new_product_form_service,
     update_product_view_service,
@@ -41,3 +42,7 @@ def update_product(id):
 @product.route("/delete/<id>", methods=["POST"])
 def delete_product(id):
     return delete_product_view_service(id)
+
+@product.route("/<id>", methods=["GET"])
+def get_product(id):
+    return get_product_detail_service(id)
