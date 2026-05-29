@@ -85,15 +85,26 @@
         {% for product in products %}
             <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
                 <div class="card h-100 product-card shadow-sm border-0 rounded-4 overflow-hidden">
-                    <img
-                        src="{{ product.imagen if product.imagen else url_for('static', filename='img/paracetamol.jpg') }}"
-                        class="card-img-top product-image"
-                        alt="Imagen de {{ product.nombre }}"
-                        onerror="this.onerror=null; this.src='{{ url_for('static', filename='img/paracetamol.jpg') }}';"
-                    >
+
+                    <!-- Imagen clickeable → detalle -->
+                    <a href="{{ url_for('product.product_detail', id=product._id) }}">
+                        <img
+                            src="{{ product.imagen if product.imagen else url_for('static', filename='img/paracetamol.jpg') }}"
+                            class="card-img-top product-image"
+                            alt="Imagen de {{ product.nombre }}"
+                            onerror="this.onerror=null; this.src='{{ url_for('static', filename='img/paracetamol.jpg') }}';"
+                        >
+                    </a>
+
                     <div class="card-body d-flex flex-column">
                         <span class="badge text-bg-secondary align-self-start mb-2">{{ product.categoria }}</span>
-                        <h2 class="h5 card-title fw-bold">{{ product.nombre }}</h2>
+
+                        <!-- Título clickeable → detalle -->
+                        <a href="{{ url_for('product.product_detail', id=product._id) }}"
+                           class="text-decoration-none text-dark">
+                            <h2 class="h5 card-title fw-bold">{{ product.nombre }}</h2>
+                        </a>
+
                         <p class="card-text text-muted small description-text">
                             {{ product.descripcion or 'Sin descripción registrada.' }}
                         </p>
@@ -111,10 +122,14 @@
                             </div>
 
                             <div class="d-grid gap-2 d-md-flex">
-                                <a class="btn btn-outline-warning flex-fill" href="{{ url_for('product.edit_product', id=product._id) }}">
+                                <a class="btn btn-outline-warning flex-fill"
+                                   href="{{ url_for('product.edit_product', id=product._id) }}">
                                     Editar
                                 </a>
-                                <form class="flex-fill" action="{{ url_for('product.delete_product', id=product._id) }}" method="POST" onsubmit="return confirm('¿Deseas eliminar este producto?');">
+                                <form class="flex-fill"
+                                      action="{{ url_for('product.delete_product', id=product._id) }}"
+                                      method="POST"
+                                      onsubmit="return confirm('¿Deseas eliminar este producto?');">
                                     <button class="btn btn-outline-danger w-100" type="submit">Eliminar</button>
                                 </form>
                             </div>
