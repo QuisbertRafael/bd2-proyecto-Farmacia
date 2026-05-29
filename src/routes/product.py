@@ -8,9 +8,14 @@ from services.product import (
     get_products_service,
     new_product_form_service,
     update_product_view_service,
+    product_detail_service,
 )
 
 product = Blueprint("product", __name__)
+
+@product.route("/<id>", methods=["GET"])
+def product_detail(id):
+    return product_detail_service(id)
 
 
 @product.route("/", methods=["GET"])
