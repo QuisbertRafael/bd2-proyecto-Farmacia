@@ -20,18 +20,13 @@
 
       <!-- Imagen -->
       <div class="col-md-5 bg-light d-flex align-items-center justify-content-center p-4">
-        {% if product.imagen %}
-          <img src="{{ product.imagen }}"
-               alt="Imagen de {{ product.nombre }}"
-               class="img-fluid rounded-3"
-               style="max-height: 320px; object-fit: contain;"
-               onerror="this.onerror=null; this.src='{{ url_for("static", filename="img/paracetamol.jpg") }}'">
-        {% else %}
-          <div class="text-center text-muted">
-            <i class="bi bi-image" style="font-size: 5rem;"></i>
-            <p class="mt-2 small">Sin imagen</p>
-          </div>
-        {% endif %}
+        <img
+          src="{{ product.imagen if product.imagen else url_for('static', filename='img/paracetamol.jpg') }}"
+          alt="Imagen de {{ product.nombre }}"
+          class="img-fluid rounded-3"
+          style="max-height: 320px; object-fit: contain;"
+          onerror="this.onerror=null; this.src='{{ url_for('static', filename='img/paracetamol.jpg') }}';"
+        >
       </div>
 
       <!-- Detalle -->
@@ -39,9 +34,15 @@
 
         <!-- Categoría + Nombre -->
         <div class="mb-3">
-          <span class="badge text-bg-secondary mb-2">{{ product.categoria or 'Sin categoría' }}</span>
+          <span class="badge text-bg-secondary mb-2">
+            {{ product.categoria or 'Sin categoría' }}
+          </span>
+
           <h1 class="h3 fw-bold mb-1">{{ product.nombre }}</h1>
-          <p class="text-muted">{{ product.descripcion or 'Sin descripción registrada.' }}</p>
+
+          <p class="text-muted">
+            {{ product.descripcion or 'Sin descripción registrada.' }}
+          </p>
         </div>
 
         <hr>
@@ -51,7 +52,7 @@
 
           <dt class="col-5 text-muted fw-normal small">Precio</dt>
           <dd class="col-7 fw-bold fs-5 text-success mb-2">
-            Bs {{ "%.2f"|format(product.precio) }}
+            Bs {{ "%.2f"|format(product.precio|float) }}
           </dd>
 
           <dt class="col-5 text-muted fw-normal small">Stock disponible</dt>
@@ -64,7 +65,9 @@
           </dd>
 
           <dt class="col-5 text-muted fw-normal small">Categoría</dt>
-          <dd class="col-7 mb-2">{{ product.categoria or '—' }}</dd>
+          <dd class="col-7 mb-2">
+            {{ product.categoria or '—' }}
+          </dd>
 
           <dt class="col-5 text-muted fw-normal small">ID producto</dt>
           <dd class="col-7 mb-2">
@@ -82,16 +85,19 @@
           </a>
 
           <a href="{{ url_for('product.edit_product', id=product._id) }}"
-             class="btn btn-warning text-white">
+             class="btn btn-warning text-white flex-fill">
             <i class="bi bi-pencil-fill"></i> Editar
           </a>
 
-          <form action="{{ url_for('product.delete_product', id=product._id) }}"
+          <form class="flex-fill"
+                action="{{ url_for('product.delete_product', id=product._id) }}"
                 method="POST"
                 onsubmit="return confirm('¿Eliminar este producto? Esta acción no se puede deshacer.')">
-            <button type="submit" class="btn btn-danger">
+
+            <button type="submit" class="btn btn-danger w-100">
               <i class="bi bi-trash-fill"></i> Eliminar
             </button>
+
           </form>
 
         </div>
@@ -99,5 +105,6 @@
     </div>
   </div>
 
+</div>
 </div>
 {% endblock %}
