@@ -3,47 +3,108 @@
 {% block title %}{{ product.nombre }}{% endblock %}
 
 {% block content %}
-<div class="mb-3">
-    <a href="{{ url_for('product.get_products') }}" class="btn btn-outline-secondary btn-sm">
-        ← Volver al listado
-    </a>
-</div>
+<div class="container py-4" style="max-width: 860px;">
 
-<div class="card shadow-sm border-0 rounded-4 overflow-hidden" style="max-width: 600px; margin: auto;">
-    <img
-        src="{{ product.imagen if product.imagen else url_for('static', filename='img/paracetamol.jpg') }}"
-        class="card-img-top"
-        style="max-height: 300px; object-fit: cover;"
-        alt="Imagen de {{ product.nombre }}"
-        onerror="this.onerror=null; this.src='{{ url_for('static', filename='img/paracetamol.jpg') }}';"
-    >
-    <div class="card-body">
-        <span class="badge text-bg-secondary mb-2">{{ product.categoria }}</span>
-        <h1 class="h3 fw-bold">{{ product.nombre }}</h1>
-        <p class="text-muted">{{ product.descripcion or 'Sin descripción registrada.' }}</p>
+  <!-- Breadcrumb -->
+  <nav aria-label="breadcrumb" class="mb-3">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item">
+        <a href="{{ url_for('product.get_products') }}">Listado de productos</a>
+      </li>
+      <li class="breadcrumb-item active">{{ product.nombre }}</li>
+    </ol>
+  </nav>
+
+  <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+    <div class="row g-0">
+
+      <!-- Imagen -->
+      <div class="col-md-5 bg-light d-flex align-items-center justify-content-center p-4">
+        <img
+          src="{{ product.imagen if product.imagen else url_for('static', filename='img/paracetamol.jpg') }}"
+          alt="Imagen de {{ product.nombre }}"
+          class="img-fluid rounded-3"
+          style="max-height: 320px; object-fit: contain;"
+          onerror="this.onerror=null; this.src='{{ url_for('static', filename='img/paracetamol.jpg') }}';"
+        >
+      </div>
+
+      <!-- Detalle -->
+      <div class="col-md-7 p-4 d-flex flex-column">
+
+        <!-- Categoría + Nombre -->
+        <div class="mb-3">
+          <span class="badge text-bg-secondary mb-2">
+            {{ product.categoria or 'Sin categoría' }}
+          </span>
+
+          <h1 class="h3 fw-bold mb-1">{{ product.nombre }}</h1>
+
+          <p class="text-muted">
+            {{ product.descripcion or 'Sin descripción registrada.' }}
+          </p>
+        </div>
 
         <hr>
 
-        <div class="d-flex justify-content-between mb-4">
-            <div>
-                <small class="text-muted d-block">Precio</small>
-                <strong class="fs-5">Bs {{ '%.2f'|format(product.precio|float) }}</strong>
-            </div>
-            <div class="text-end">
-                <small class="text-muted d-block">Stock disponible</small>
-                <strong class="fs-5">{{ product.stock }} unidades</strong>
-            </div>
-        </div>
+        <!-- Campos -->
+        <dl class="row mb-0">
 
-        <div class="d-flex gap-2">
-            <a class="btn btn-warning flex-fill" href="{{ url_for('product.edit_product', id=product._id) }}">
-                Editar
-            </a>
-            <form class="flex-fill" action="{{ url_for('product.delete_product', id=product._id) }}" method="POST"
-                  onsubmit="return confirm('¿Deseas eliminar este producto?');">
-                <button class="btn btn-danger w-100" type="submit">Eliminar</button>
-            </form>
+          <dt class="col-5 text-muted fw-normal small">Precio</dt>
+          <dd class="col-7 fw-bold fs-5 text-success mb-2">
+            Bs {{ "%.2f"|format(product.precio|float) }}
+          </dd>
+
+          <dt class="col-5 text-muted fw-normal small">Stock disponible</dt>
+          <dd class="col-7 fw-semibold mb-2">
+            {% if product.stock > 0 %}
+              <span class="text-success">{{ product.stock }} unidades</span>
+            {% else %}
+              <span class="text-danger">Sin stock</span>
+            {% endif %}
+          </dd>
+
+          <dt class="col-5 text-muted fw-normal small">Categoría</dt>
+          <dd class="col-7 mb-2">
+            {{ product.categoria or '—' }}
+          </dd>
+
+          <dt class="col-5 text-muted fw-normal small">ID producto</dt>
+          <dd class="col-7 mb-2">
+            <code class="small">{{ product._id }}</code>
+          </dd>
+
+        </dl>
+
+        <!-- Botones -->
+        <div class="d-flex flex-wrap gap-2 mt-auto pt-4">
+
+          <a href="{{ url_for('product.get_products') }}"
+             class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left"></i> Volver al listado
+          </a>
+
+          <a href="{{ url_for('product.edit_product', id=product._id) }}"
+             class="btn btn-warning text-white flex-fill">
+            <i class="bi bi-pencil-fill"></i> Editar
+          </a>
+
+          <form class="flex-fill"
+                action="{{ url_for('product.delete_product', id=product._id) }}"
+                method="POST"
+                onsubmit="return confirm('¿Eliminar este producto? Esta acción no se puede deshacer.')">
+
+            <button type="submit" class="btn btn-danger w-100">
+              <i class="bi bi-trash-fill"></i> Eliminar
+            </button>
+
+          </form>
+
         </div>
+      </div>
     </div>
+  </div>
+
+</div>
 </div>
 {% endblock %}

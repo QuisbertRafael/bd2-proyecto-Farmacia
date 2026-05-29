@@ -1,6 +1,5 @@
 from flask import Blueprint
 
-
 from services.product import (
     create_product_service,
     delete_product_view_service,
@@ -42,6 +41,7 @@ def update_product(id):
 @product.route("/delete/<id>", methods=["POST"])
 def delete_product(id):
     return delete_product_view_service(id)
+
 
 @product.route("/<id>", methods=["GET"])
 def get_product(id):
